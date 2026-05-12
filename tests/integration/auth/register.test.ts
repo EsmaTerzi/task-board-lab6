@@ -3,9 +3,9 @@
  */
 
 import request from 'supertest';
-import { createApp } from '../../../src/app';
+import { createApp } from '@/app';
 import { Express } from 'express';
-import { truncateAll } from '../../helpers/db.helper';
+import { truncateAll } from '@helpers/db.helper';
 
 describe('POST /auth/register', () => {
   let app: Express;

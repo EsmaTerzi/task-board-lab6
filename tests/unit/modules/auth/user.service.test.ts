@@ -2,8 +2,8 @@
  * Unit tests for UserService
  */
 
-import { UserService } from '../../../src/modules/auth/user.service';
-import { truncateAll, getAllUsers } from '../../helpers/db.helper';
+import { UserService } from '@modules/auth/user.service';
+import { truncateAll, getAllUsers } from '@helpers/db.helper';
 
 describe('UserService', () => {
   let service: UserService;

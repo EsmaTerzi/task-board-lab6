@@ -2,10 +2,10 @@
  * Unit tests for AuthService
  */
 
-import { AuthService } from '../../../src/modules/auth/auth.service';
-import { TokenService } from '../../../src/modules/auth/token.service';
-import { UserService } from '../../../src/modules/auth/user.service';
-import { truncateAll } from '../../helpers/db.helper';
+import { AuthService } from '@modules/auth/auth.service';
+import { TokenService } from '@modules/auth/token.service';
+import { UserService } from '@modules/auth/user.service';
+import { truncateAll } from '@helpers/db.helper';
 
 describe('AuthService.login()', () => {
   let authService: AuthService;

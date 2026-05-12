@@ -3,10 +3,10 @@
  */
 
 import request from 'supertest';
-import { createApp } from '../../../src/app';
+import { createApp } from '@/app';
 import { Express } from 'express';
-import { truncateAll } from '../../helpers/db.helper';
-import { UserService } from '../../../src/modules/auth/user.service';
+import { truncateAll } from '@helpers/db.helper';
+import { UserService } from '@modules/auth/user.service';
 
 describe('POST /auth/login', () => {
   let app: Express;

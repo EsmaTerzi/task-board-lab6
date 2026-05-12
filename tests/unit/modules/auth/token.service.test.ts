@@ -2,9 +2,9 @@
  * Unit tests for TokenService
  */
 
-import { TokenService } from '../../../src/modules/auth/token.service';
-import { makeToken, makeExpiredToken, decodeToken } from '../../helpers/jwt.helper';
-import { truncateTable, getAllBlocklistedTokens } from '../../helpers/db.helper';
+import { TokenService } from '@modules/auth/token.service';
+import { makeToken, makeExpiredToken, decodeToken } from '@helpers/jwt.helper';
+import { truncateTable, getAllBlocklistedTokens } from '@helpers/db.helper';
 import { randomUUID } from 'crypto';
 
 describe('TokenService', () => {
