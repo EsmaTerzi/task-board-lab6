@@ -16,6 +16,7 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
+    "types": ["jest", "node"],
     "paths": {
       "@/*": ["src/*"],
       "@modules/*": ["src/modules/*"],
@@ -25,6 +26,6 @@
       "@types/*": ["src/types/*"]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "tests"]
+  "include": ["src/**/*", "tests/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

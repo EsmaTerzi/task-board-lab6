@@ -6,7 +6,7 @@
 /**
  * Registered user in the database
  */
-export interface User {
+export interface User extends Record<string, unknown> {
   id: string;
   email: string;
   password_hash: string;

@@ -40,7 +40,7 @@ export const pool = createPool();
  * @param {unknown[]} params - Query parameters
  * @returns {Promise<QueryResult>} Query result
  */
-export async function query<T = Record<string, unknown>>(
+export async function query<T extends Record<string, unknown> = Record<string, unknown>>(
   sql: string,
   params?: unknown[]
 ): Promise<QueryResult<T>> {

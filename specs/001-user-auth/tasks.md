@@ -54,12 +54,12 @@
 
 ### Tests (write first — must fail before implementation)
 
-- [ ] T019 [US1] Write unit tests for `UserService` in `tests/unit/user.service.test.ts`:
+- [x] T019 [US1] Write unit tests for `UserService` in `tests/unit/user.service.test.ts`:
   - `register()` happy path → returns created user
   - `register()` duplicate email → throws conflict error
   - `register()` password stored as bcrypt hash, never plaintext
   - `findByEmail()` found and not-found cases
-- [ ] T020 [US1] Write integration tests for registration in `tests/integration/register.test.ts`:
+- [x] T020 [US1] Write integration tests for registration in `tests/integration/register.test.ts`:
   - Valid body → 201 + `{ id }`
   - Duplicate email → 409
   - Invalid email format → 400
@@ -68,10 +68,10 @@
 
 ### Implementation
 
-- [ ] T021 [US1] Implement `src/modules/auth/user.service.ts` — `register(dto)`: normalize email, validate uniqueness, hash password (bcrypt cost 12), insert user, return `{ id }`; `findByEmail(email)`: lookup by normalized email (depends on T008, T009, T014)
-- [ ] T022 [US1] Implement `src/modules/auth/auth.controller.ts` `register` handler — parse body via `RegisterSchema`, call `UserService.register()`, map errors to HTTP responses
-- [ ] T023 [US1] Create `src/modules/auth/auth.router.ts` — mount `POST /auth/register`
-- [ ] T024 [US1] Create `src/app.ts` — Express app factory, mount auth router, global error handler
+- [x] T021 [US1] Implement `src/modules/auth/user.service.ts` — `register(dto)`: normalize email, validate uniqueness, hash password (bcrypt cost 12), insert user, return `{ id }`; `findByEmail(email)`: lookup by normalized email (depends on T008, T009, T014)
+- [x] T022 [US1] Implement `src/modules/auth/auth.controller.ts` `register` handler — parse body via `RegisterSchema`, call `UserService.register()`, map errors to HTTP responses
+- [x] T023 [US1] Create `src/modules/auth/auth.router.ts` — mount `POST /auth/register`
+- [x] T024 [US1] Create `src/app.ts` — Express app factory, mount auth router, global error handler
 - [ ] T025 [US1] Confirm unit tests pass; confirm integration tests pass
 
 **Checkpoint**: Registration works end-to-end. Run `npm test -- register` — all green.
@@ -86,15 +86,15 @@
 
 ### Tests (write first — must fail before implementation)
 
-- [ ] T026 [US2] Write unit tests for `TokenService` in `tests/unit/token.service.test.ts`:
+- [x] T026 [US2] Write unit tests for `TokenService` in `tests/unit/token.service.test.ts`:
   - `issue()` returns JWT with correct `exp` (+24h) and `jti`
   - `verify()` accepts valid token, rejects expired, rejects malformed, rejects `alg: none`
   - `isBlocklisted()` returns false for new token
-- [ ] T027 [US2] Write unit tests for `AuthService.login()` in `tests/unit/auth.service.test.ts`:
+- [x] T027 [US2] Write unit tests for `AuthService.login()` in `tests/unit/auth.service.test.ts`:
   - Correct credentials → returns access token
   - Wrong password → throws unauthorized (bcrypt always runs)
   - Unknown email → throws unauthorized (dummy hash comparison — same timing)
-- [ ] T028 [US2] Write integration tests in `tests/integration/login.test.ts`:
+- [x] T028 [US2] Write integration tests in `tests/integration/login.test.ts`:
   - Valid credentials → 200 + `{ accessToken }`
   - Wrong password → 401; body identical to unknown email response
   - Unknown email → 401; body identical to wrong password response
@@ -103,10 +103,10 @@
 
 ### Implementation
 
-- [ ] T029 [US2] Implement `src/modules/auth/token.service.ts` — `issue(userId)`: sign JWT HS256 with `jti` + `exp`; `verify(token)`: validate signature, expiry, blocklist; `isBlocklisted(jti)`: query `token_blocklist`
-- [ ] T030 [US2] Implement `AuthService.login(dto)` in `src/modules/auth/auth.service.ts` — normalize email, `findByEmail()`, dummy-hash if not found (constant-time), `bcrypt.compare()`, issue JWT
-- [ ] T031 [US2] Implement `src/middleware/authenticate.ts` — extract Bearer token, call `TokenService.verify()`, attach payload to `req.user`
-- [ ] T032 [US2] Add `POST /auth/login` to `auth.router.ts` and `login` handler to `auth.controller.ts`
+- [x] T029 [US2] Implement `src/modules/auth/token.service.ts` — `issue(userId)`: sign JWT HS256 with `jti` + `exp`; `verify(token)`: validate signature, expiry, blocklist; `isBlocklisted(jti)`: query `token_blocklist`
+- [x] T030 [US2] Implement `AuthService.login(dto)` in `src/modules/auth/auth.service.ts` — normalize email, `findByEmail()`, dummy-hash if not found (constant-time), `bcrypt.compare()`, issue JWT
+- [x] T031 [US2] Implement `src/middleware/authenticate.ts` — extract Bearer token, call `TokenService.verify()`, attach payload to `req.user`
+- [x] T032 [US2] Add `POST /auth/login` to `auth.router.ts` and `login` handler to `auth.controller.ts`
 - [ ] T033 [US2] Confirm all unit and integration tests pass
 
 **Checkpoint**: Login works end-to-end; enumeration tests pass; `alg: none` test passes.
