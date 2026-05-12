@@ -14,13 +14,13 @@
 
 **Purpose**: Initialize project scaffolding, tooling, and config before any feature work.
 
-- [ ] T001 Initialize Node.js project — `npm init`, install all production + dev dependencies (`express`, `bcrypt`, `jsonwebtoken`, `pg`, `zod`, `nodemailer`, `dotenv`, `jest`, `ts-jest`, `supertest`, `@types/*`)
-- [ ] T002 [P] Create `tsconfig.json` with `strict: true`, `rootDir: src`, `outDir: dist`, path aliases
-- [ ] T003 [P] Configure ESLint — `@typescript-eslint/recommended` + `eslint-plugin-jsdoc` rules
-- [ ] T004 [P] Configure Prettier and add `.prettierrc`
-- [ ] T005 [P] Create `jest.config.ts` with `ts-jest`, coverage thresholds (80% branches/functions/lines/statements on `src/modules/**`)
-- [ ] T006 [P] Create `.env.example` with all required variables (`DATABASE_URL`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `BCRYPT_COST`, `SMTP_*`)
-- [ ] T007 Add `package.json` scripts: `build`, `start`, `dev`, `test`, `test:coverage`, `lint`
+- [x] T001 Initialize Node.js project — `npm init`, install all production + dev dependencies (`express`, `bcrypt`, `jsonwebtoken`, `pg`, `zod`, `nodemailer`, `dotenv`, `jest`, `ts-jest`, `supertest`, `@types/*`)
+- [x] T002 [P] Create `tsconfig.json` with `strict: true`, `rootDir: src`, `outDir: dist`, path aliases
+- [x] T003 [P] Configure ESLint — `@typescript-eslint/recommended` + `eslint-plugin-jsdoc` rules
+- [x] T004 [P] Configure Prettier and add `.prettierrc`
+- [x] T005 [P] Create `jest.config.ts` with `ts-jest`, coverage thresholds (80% branches/functions/lines/statements on `src/modules/**`)
+- [x] T006 [P] Create `.env.example` with all required variables (`DATABASE_URL`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `BCRYPT_COST`, `SMTP_*`)
+- [x] T007 Add `package.json` scripts: `build`, `start`, `dev`, `test`, `test:coverage`, `lint`
 
 **Checkpoint**: `npm run lint` and `npm test` run without errors (zero test files yet).
 
@@ -30,17 +30,17 @@
 
 **Purpose**: Shared infrastructure all services depend on.
 
-- [ ] T008 Create `src/config/auth.config.ts` — export typed constants: `BCRYPT_COST`, `JWT_SECRET`, `JWT_EXPIRES_IN` (24h), `RESET_TOKEN_TTL_HOURS` (1h); validate all env vars at startup
-- [ ] T009 [P] Create `src/config/db.config.ts` — PostgreSQL connection pool via `pg`; export typed `query()` helper
-- [ ] T010 Create `src/db/migrations/001_create_users.sql` — `users` table (`id UUID PK`, `email VARCHAR UNIQUE`, `password_hash TEXT`, `created_at`, `updated_at`)
-- [ ] T011 [P] Create `src/db/migrations/002_create_password_reset_tokens.sql` — `password_reset_tokens` table
-- [ ] T012 [P] Create `src/db/migrations/003_create_token_blocklist.sql` — `token_blocklist` table
-- [ ] T013 Create migration runner script or apply migrations manually; confirm all 3 tables exist in DB
-- [ ] T014 Create `src/modules/auth/auth.types.ts` — interfaces: `User`, `NewUser`, `AuthTokenPayload`, `PasswordResetToken`, `BlocklistEntry`
-- [ ] T015 [P] Create `src/modules/auth/auth.schemas.ts` — Zod schemas: `RegisterSchema`, `LoginSchema`, `ResetRequestSchema`, `ResetConfirmSchema`
-- [ ] T016 Create `src/middleware/validate.ts` — generic Zod validation middleware; returns 400 with field errors on failure
-- [ ] T017 [P] Create `tests/helpers/db.helper.ts` — test DB connection, `truncateAll()` for test isolation
-- [ ] T018 [P] Create `tests/helpers/jwt.helper.ts` — helpers: `makeExpiredToken()`, `makeTokenWithJti()`, `decodeToken()`
+- [x] T008 Create `src/config/auth.config.ts` — export typed constants: `BCRYPT_COST`, `JWT_SECRET`, `JWT_EXPIRES_IN` (24h), `RESET_TOKEN_TTL_HOURS` (1h); validate all env vars at startup
+- [x] T009 [P] Create `src/config/db.config.ts` — PostgreSQL connection pool via `pg`; export typed `query()` helper
+- [x] T010 Create `src/db/migrations/001_create_users.sql` — `users` table (`id UUID PK`, `email VARCHAR UNIQUE`, `password_hash TEXT`, `created_at`, `updated_at`)
+- [x] T011 [P] Create `src/db/migrations/002_create_password_reset_tokens.sql` — `password_reset_tokens` table
+- [x] T012 [P] Create `src/db/migrations/003_create_token_blocklist.sql` — `token_blocklist` table
+- [x] T013 Create migration runner script or apply migrations manually; confirm all 3 tables exist in DB
+- [x] T014 Create `src/modules/auth/auth.types.ts` — interfaces: `User`, `NewUser`, `AuthTokenPayload`, `PasswordResetToken`, `BlocklistEntry`
+- [x] T015 [P] Create `src/modules/auth/auth.schemas.ts` — Zod schemas: `RegisterSchema`, `LoginSchema`, `ResetRequestSchema`, `ResetConfirmSchema`
+- [x] T016 Create `src/middleware/validate.ts` — generic Zod validation middleware; returns 400 with field errors on failure
+- [x] T017 [P] Create `tests/helpers/db.helper.ts` — test DB connection, `truncateAll()` for test isolation
+- [x] T018 [P] Create `tests/helpers/jwt.helper.ts` — helpers: `makeExpiredToken()`, `makeTokenWithJti()`, `decodeToken()`
 
 **Checkpoint**: DB connects, migrations applied, types and schemas compile with zero errors.
 
@@ -203,6 +203,95 @@
 
 ---
 
+## Phase 9: E2E Tests (Testing Pyramid: 10% E2E)
+
+**Purpose**: Validate critical user journeys end-to-end using Playwright; completes the testing pyramid (70% unit, 20% integration, 10% E2E).
+
+**Framework**: Playwright 1.40+  
+**Test Execution**: `npm run test:e2e`  
+**Scope**: 3 critical workflows covering all major user paths; minimal but comprehensive.
+
+### E2E Test Suite
+
+- [ ] T055 Create `tests/e2e/user-registration-login.spec.ts` — critical journey: **New user registration → Login → Authenticated API request**
+  - User registers with email `test-user-e2e@example.com` and password `SecurePass123!`
+  - Verify registration returns 201 and user ID
+  - User logs in with same credentials
+  - Verify login returns 200 and valid JWT access token
+  - User makes authenticated request (e.g., `GET /auth/me`) with JWT in `Authorization: Bearer` header
+  - Verify protected endpoint returns 200 and user data
+
+- [ ] T056 Create `tests/e2e/password-recovery.spec.ts` — critical journey: **Password reset request → Token validation → Login with new password**
+  - Pre-setup: User registers with email and initial password
+  - User requests password reset for their email
+  - Verify reset request returns 200 (no email sent in test, but test captures the action)
+  - Simulate receiving reset token (extract from mock email or DB in test DB)
+  - User confirms password reset with token and new password `UpdatedPass456!`
+  - Verify reset confirmation returns 200
+  - User logs in with old password → expects 401 (old password invalid)
+  - User logs in with new password → expects 200 and valid JWT
+  - Verify JWT works for protected endpoints
+
+- [ ] T057 Create `tests/e2e/session-lifecycle.spec.ts` — critical journey: **Login → Use authenticated endpoint → Logout → Token rejected**
+  - Pre-setup: User registers with email and password
+  - User logs in
+  - Verify login returns JWT
+  - User makes authenticated request with JWT (e.g., `GET /auth/profile` or any protected route)
+  - Verify request returns 200
+  - User logs out with the same JWT
+  - Verify logout returns 204 (No Content)
+  - User attempts to reuse the same JWT on a protected endpoint
+  - Verify request returns 401 (token blocklisted)
+  - User logs in again (new session)
+  - Verify new JWT works on protected endpoint
+
+### Setup & Configuration
+
+- [ ] T058 Configure Playwright in `playwright.config.ts`
+  - Base URL: `http://localhost:3000` (or from env `E2E_BASE_URL`)
+  - Timeout: 30 seconds per test
+  - Retries: 0 (E2E should be stable; failures are real issues)
+  - Browsers: Chromium (default; headless in CI)
+  - Screenshot on failure: enabled, save to `test-results/`
+
+- [ ] T059 Create `tests/e2e/helpers.ts` — utility functions (reusable across E2E tests)
+  - `registerUser(email, password)`: POST `/auth/register` with body
+  - `loginUser(email, password)`: POST `/auth/login`, extract and return access token
+  - `makeAuthenticatedRequest(token, method, path)`: Make HTTP request with `Authorization: Bearer` header
+  - `logoutUser(token)`: POST `/auth/logout` with token
+  - `generateTestEmail()`: Return unique email `e2e-test-${Date.now()}@example.com`
+
+- [ ] T060 Create `tests/e2e/fixtures.ts` — Playwright test fixtures for setup/teardown
+  - `authenticatedUser` fixture: Registers a test user, logs in, provides token and cleanup
+  - `testDatabase` fixture: Connects to test DB, clears auth tables before/after each test
+
+### Execution & Integration
+
+- [ ] T061 Update `package.json` scripts:
+  - Add `"test:e2e": "playwright test"` (runs all E2E tests in `tests/e2e/**/*.spec.ts`)
+  - Add `"test:e2e:ui": "playwright test --ui"` (interactive UI mode for debugging)
+  - Add `"test:e2e:headed": "playwright test --headed"` (visible browser)
+
+- [ ] T062 Update CI pipeline (`.github/workflows/ci.yml`):
+  - Run `npm run test:e2e` after unit and integration tests pass
+  - Parallel execution with unit/integration tests is optional (can be sequential to avoid flakiness)
+  - Upload Playwright test report (HTML report) as artifact on failure
+  - **Note**: E2E failures should not block merge (optional gate for v1); document as `if: always()` step
+
+- [ ] T063 Confirm all E2E tests pass locally:
+  - Start app: `npm run dev` (in separate terminal)
+  - Run E2E tests: `npm run test:e2e`
+  - Verify all 3 journeys pass
+
+**Checkpoint**: E2E test suite completes testing pyramid (70/20/10 distribution achieved). All critical user flows validated end-to-end.
+
+**Note**: E2E tests in CI can be slow; optional to run on every push. Recommended to run:
+- On PR to main (before merge)
+- On releases (nightly or pre-release)
+- On demand (`workflow_dispatch`)
+
+---
+
 ## Summary
 
 | Phase | Tasks | Depends On |
@@ -215,3 +304,4 @@
 | 6 — Session/Logout (US4, P2) | T041–T046 | Phase 4 |
 | 7 — Security & Polish | T047–T054 | Phases 3–6 |
 | 8 — Rate Limiting | TBD | Clarification |
+| 9 — E2E Tests (10%) | T055–T063 | Phases 3–6 |
