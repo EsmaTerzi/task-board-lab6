@@ -72,7 +72,7 @@
 - [x] T022 [US1] Implement `src/modules/auth/auth.controller.ts` `register` handler — parse body via `RegisterSchema`, call `UserService.register()`, map errors to HTTP responses
 - [x] T023 [US1] Create `src/modules/auth/auth.router.ts` — mount `POST /auth/register`
 - [x] T024 [US1] Create `src/app.ts` — Express app factory, mount auth router, global error handler
-- [ ] T025 [US1] Confirm unit tests pass; confirm integration tests pass
+- [x] T025 [US1] Confirm unit tests pass; confirm integration tests pass
 
 **Checkpoint**: Registration works end-to-end. Run `npm test -- register` — all green.
 
@@ -107,7 +107,7 @@
 - [x] T030 [US2] Implement `AuthService.login(dto)` in `src/modules/auth/auth.service.ts` — normalize email, `findByEmail()`, dummy-hash if not found (constant-time), `bcrypt.compare()`, issue JWT
 - [x] T031 [US2] Implement `src/middleware/authenticate.ts` — extract Bearer token, call `TokenService.verify()`, attach payload to `req.user`
 - [x] T032 [US2] Add `POST /auth/login` to `auth.router.ts` and `login` handler to `auth.controller.ts`
-- [ ] T033 [US2] Confirm all unit and integration tests pass
+- [x] T033 [US2] Confirm all unit and integration tests pass
 
 **Checkpoint**: Login works end-to-end; enumeration tests pass; `alg: none` test passes.
 
