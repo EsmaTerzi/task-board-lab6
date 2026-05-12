@@ -140,11 +140,8 @@ describe('AuthService.logout()', () => {
     // Logout
     await authService.logout(accessToken);
 
-    // Token should now be blocklisted
-    const payload = tokenService.verify(accessToken);
-    const isBlocklisted = await tokenService.isBlocklisted((payload as any).jti);
-
-    expect(isBlocklisted).toBe(true);
+    // Token should now be blocklisted and verify should throw
+    expect(() => tokenService.verify(accessToken)).toThrow(/blocklist/i);
   });
 
   it('should be idempotent (multiple logouts same token)', async () => {

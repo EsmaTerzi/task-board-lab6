@@ -47,8 +47,8 @@ export interface PasswordResetToken {
 /**
  * Token blocklist entry
  */
-export interface BlocklistEntry {
+export interface BlocklistEntry extends Record<string, unknown> {
   jti: string;
   expires_at: Date;
-  created_at: Date;
+  created_at?: Date;
 }

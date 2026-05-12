@@ -23,10 +23,10 @@ export function makeToken(
     jti,
     ...overrides,
   };
-  return jwt.sign(payload, authConfig.JWT_SECRET, {
+  return jwt.sign(payload, authConfig.JWT_SECRET as string, {
     expiresIn: authConfig.JWT_EXPIRES_IN,
-    algorithm: 'HS256',
-  });
+    algorithm: 'HS256' as const,
+  } as jwt.SignOptions);
 }
 
 /**
@@ -40,10 +40,10 @@ export function makeExpiredToken(userId: string): string {
     sub: userId,
     jti,
   };
-  return jwt.sign(payload, authConfig.JWT_SECRET, {
+  return jwt.sign(payload, authConfig.JWT_SECRET as string, {
     expiresIn: '-1h', // Expired 1 hour ago
-    algorithm: 'HS256',
-  });
+    algorithm: 'HS256' as const,
+  } as jwt.SignOptions);
 }
 
 /**
@@ -57,10 +57,10 @@ export function makeTokenWithJti(userId: string, jti: string): string {
     sub: userId,
     jti,
   };
-  return jwt.sign(payload, authConfig.JWT_SECRET, {
+  return jwt.sign(payload, authConfig.JWT_SECRET as string, {
     expiresIn: authConfig.JWT_EXPIRES_IN,
-    algorithm: 'HS256',
-  });
+    algorithm: 'HS256' as const,
+  } as jwt.SignOptions);
 }
 
 /**

@@ -15,10 +15,10 @@ export class UserService {
   /**
    * Register a new user with email and password
    * @param {NewUser} dto - Registration input (email, password)
-   * @returns {Promise<User>} Created user (without password_hash)
+   * @returns {Promise<User>} Created user
    * @throws {Error} If email already exists
    */
-  async register(dto: NewUser): Promise<Omit<User, 'password_hash'>> {
+  async register(dto: NewUser): Promise<User> {
     const email = dto.email.toLowerCase().trim();
 
     // Check if user already exists
@@ -39,7 +39,7 @@ export class UserService {
     const result = await query<User>(
       `INSERT INTO users (email, password_hash) 
        VALUES ($1, $2) 
-       RETURNING id, email, created_at, updated_at`,
+       RETURNING id, email, password_hash, created_at, updated_at`,
       [email, password_hash]
     );
 
@@ -51,6 +51,7 @@ export class UserService {
     return {
       id: user.id,
       email: user.email,
+      password_hash: user.password_hash,
       created_at: user.created_at,
       updated_at: user.updated_at,
     };

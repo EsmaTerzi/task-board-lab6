@@ -1,16 +1,23 @@
 /**
  * Database test helper functions
+ * Works with both PostgreSQL and SQLite
  * @module tests/helpers/db.helper
  */
 
-import { pool } from '../../src/db/config';
+import { pool, query } from '@db/config';
+import SQLiteAdapter from '@db/sqlite-adapter';
 
 /**
  * Get a connection from the test pool
  * @returns {Promise<any>} Database client
  */
 export async function getTestDB() {
-  return pool.connect();
+  // For SQLite, pool is already a SQLiteAdapter
+  if (pool instanceof SQLiteAdapter) {
+    return pool;
+  }
+  // For PostgreSQL
+  return (pool as any).connect();
 }
 
 /**
@@ -18,7 +25,17 @@ export async function getTestDB() {
  * @returns {Promise<void>}
  */
 export async function truncateAll(): Promise<void> {
-  const client = await pool.connect();
+  // For SQLite in-memory database
+  if (pool instanceof SQLiteAdapter) {
+    const db = pool.getDatabase();
+    db.exec('DELETE FROM password_reset_tokens');
+    db.exec('DELETE FROM token_blocklist');
+    db.exec('DELETE FROM users');
+    return;
+  }
+
+  // For PostgreSQL
+  const client = await (pool as any).connect();
   try {
     // Disable FK constraints temporarily
     await client.query('SET session_replication_role = REPLICA');
@@ -41,11 +58,17 @@ export async function truncateAll(): Promise<void> {
  * @returns {Promise<void>}
  */
 export async function truncateTable(tableName: string): Promise<void> {
-  const client = await pool.connect();
+  // For SQLite
+  if (pool instanceof SQLiteAdapter) {
+    const db = pool.getDatabase();
+    db.exec(`DELETE FROM ${tableName}`);
+    return;
+  }
+
+  // For PostgreSQL
+  const client = await (pool as any).connect();
   try {
-    await client.query('SET session_replication_role = REPLICA');
-    await client.query(`TRUNCATE TABLE ${tableName} CASCADE`);
-    await client.query('SET session_replication_role = DEFAULT');
+    await client.query(`TRUNCATE TABLE ${tableName}`);
   } finally {
     client.release();
   }
@@ -56,7 +79,7 @@ export async function truncateTable(tableName: string): Promise<void> {
  * @returns {Promise<any[]>} Array of user records
  */
 export async function getAllUsers(): Promise<any[]> {
-  const result = await pool.query('SELECT * FROM users');
+  const result = await query('SELECT * FROM users');
   return result.rows;
 }
 
@@ -65,6 +88,6 @@ export async function getAllUsers(): Promise<any[]> {
  * @returns {Promise<any[]>} Array of blocklist entries
  */
 export async function getAllBlocklistedTokens(): Promise<any[]> {
-  const result = await pool.query('SELECT * FROM token_blocklist');
+  const result = await query('SELECT * FROM token_blocklist');
   return result.rows;
 }

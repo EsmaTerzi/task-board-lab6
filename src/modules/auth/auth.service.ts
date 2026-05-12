@@ -76,11 +76,20 @@ export class AuthService {
    * @throws {Error} If token is invalid
    */
   async logout(token: string): Promise<void> {
-    // Verify token is valid
-    const payload = this.tokenService.verify(token) as any;
+    try {
+      // Verify token is valid
+      const payload = this.tokenService.verify(token) as any;
 
-    // Add token jti to blocklist
-    await this.tokenService.blocklist(payload.jti);
+      // Add token jti to blocklist
+      await this.tokenService.blocklist(payload.jti);
+    } catch (error) {
+      // If token is already blocklisted, that's ok (idempotent)
+      if ((error as Error).message.includes('blocklist')) {
+        return;
+      }
+      // Otherwise, re-throw the error
+      throw error;
+    }
   }
 }
 

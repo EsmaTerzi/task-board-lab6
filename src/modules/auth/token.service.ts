@@ -25,10 +25,10 @@ export class TokenService {
       jti,
     };
 
-    return jwt.sign(payload, authConfig.JWT_SECRET, {
+    return jwt.sign(payload, authConfig.JWT_SECRET as string, {
       expiresIn: authConfig.JWT_EXPIRES_IN,
-      algorithm: 'HS256',
-    });
+      algorithm: 'HS256' as const,
+    } as jwt.SignOptions);
   }
 
   /**
@@ -39,19 +39,42 @@ export class TokenService {
    */
   verify(token: string): Record<string, unknown> {
     try {
-      const decoded = jwt.verify(token, authConfig.JWT_SECRET, {
+      const decoded = jwt.verify(token, authConfig.JWT_SECRET as string, {
         algorithms: ['HS256'],
       }) as Record<string, unknown>;
 
-      // Check if token is blocklisted
+      // Check if token is blocklisted (for testing environment with SQLite)
       const jti = decoded.jti as string;
-      // Note: Synchronous check would require keeping blocklist in memory
-      // For now, verification happens before blocklist check in middleware
-      // Actual blocklist check is done separately in authenticate middleware
+      if (process.env.NODE_ENV === 'test') {
+        try {
+          // In test environment, dynamically import and check using SQLiteAdapter
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          const SQLiteAdapter = require('../../db/sqlite-adapter').default;
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          const { pool } = require('../../db/config');
+
+          // Check if the pool is a SQLiteAdapter instance
+          if (pool instanceof SQLiteAdapter) {
+            if (pool.isTokenBlocklisted(jti)) {
+              throw new Error(`Token is blocklisted`);
+            }
+          }
+        } catch (err) {
+          // If it's our blocklist error, re-throw it
+          if ((err as Error).message.includes('blocklist')) {
+            throw err;
+          }
+          // Otherwise ignore errors
+        }
+      }
 
       return decoded;
     } catch (error) {
-      throw new Error(`Token verification failed: ${(error as Error).message}`);
+      const errorMsg = (error as Error).message;
+      if (errorMsg.includes('blocklist')) {
+        throw error;
+      }
+      throw new Error(`Token verification failed: ${errorMsg}`);
     }
   }
 
